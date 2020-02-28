@@ -1,0 +1,71 @@
+language: go
+go_import_path: github.com/ethercore/go-ethercore
+sudo: false
+matrix:
+  include:
+    # These are the latest Go versions.
+    - os: linux
+      dist: xenial
+      go: 1.13.x
+      git:
+        submodules: false # avoid cloning ethereum/tests
+      script:
+        - go run build/ci.go install
+      before_deploy:
+        - sh build/deploy.sh
+      deploy:
+        provider: releases
+        api_key:
+          secure: zzGlDZmW4RNV2SGTnokW8TqP3VFCJc5OuMwUhpYCE9FmX2WkSONoT5Oe2q9WdC0AqrWS8KBM8R2RGQmf1cIQRXY9rQ0K9VnbpXPsyU3+RE9ZsFaks1/dPRNhiruAM36n42Ef0GsRPJf2x/RnP0+fS4i5jXRS3Y5D7AyycGl8HEKTQeUqsvjepOqhN/NK0BLUiq243SjyLyrCSNXZnYyfg14O7maW2CKpskLICBkV29lCkZc/EjkWX3VqxsX/6IXQYziiU57HVn71JNfy1QL36Lu7rptooqi1b26klnIXmAjG1G7LXXciv/bbwGoc6FXMqf6DkLI/5uqbawL+AEf77e8Kt+oJfTorZ8lY8CMZlsQXp+oBS7pHu7/9hEp3NsGFaXoRQdGbKRO+8G1AhamLI8G5l/Cf99MdlM0zJvpYztiEYtcFIRoUsQnz2M0yii45BKtWMxGaCUFRruaYTvYgOd/eabcaiv9CDGnXCc+YiNpAn7RwwPkXiRO/QpMIKdPJ6WCvwPHtiobHVvXURZsscuw8ePzqf/GvahmLgeLgytoGf1Ru5PerrYUdF0HbLX/Knh9g2sUibLBOE9VIXcxlwNHcIJ70f7VwH82jaN9q57yi5RTQszgifYZp1FZk2tZaVuf9BPmWoFB3nsaAetdxE9M26r4isZi6b//584nBt88=
+        file: ethercore-geth*-$TRAVIS_OS_NAME-$TRAVIS_TAG.*
+        file_glob: true
+        draft: true
+        on:
+          repo: ethercore/go-ethercore
+          tags: true
+        skip_cleanup: true
+        tag_name: "$TRAVIS_TAG"
+
+    - os: osx
+      go: 1.13.x
+      git:
+        submodules: false # avoid cloning ethereum/tests
+      script:
+        - echo "Increase the maximum number of open file descriptors on macOS"
+        - NOFILE=20480
+        - sudo sysctl -w kern.maxfiles=$NOFILE
+        - sudo sysctl -w kern.maxfilesperproc=$NOFILE
+        - sudo launchctl limit maxfiles $NOFILE $NOFILE
+        - sudo launchctl limit maxfiles
+        - ulimit -S -n $NOFILE
+        - ulimit -n
+        - unset -f cd # workaround for https://github.com/travis-ci/travis-ci/issues/8703
+        - go run build/ci.go install
+      before_deploy:
+        - sh build/deploy.sh
+      deploy:
+        provider: releases
+        api_key:
+          secure: zzGlDZmW4RNV2SGTnokW8TqP3VFCJc5OuMwUhpYCE9FmX2WkSONoT5Oe2q9WdC0AqrWS8KBM8R2RGQmf1cIQRXY9rQ0K9VnbpXPsyU3+RE9ZsFaks1/dPRNhiruAM36n42Ef0GsRPJf2x/RnP0+fS4i5jXRS3Y5D7AyycGl8HEKTQeUqsvjepOqhN/NK0BLUiq243SjyLyrCSNXZnYyfg14O7maW2CKpskLICBkV29lCkZc/EjkWX3VqxsX/6IXQYziiU57HVn71JNfy1QL36Lu7rptooqi1b26klnIXmAjG1G7LXXciv/bbwGoc6FXMqf6DkLI/5uqbawL+AEf77e8Kt+oJfTorZ8lY8CMZlsQXp+oBS7pHu7/9hEp3NsGFaXoRQdGbKRO+8G1AhamLI8G5l/Cf99MdlM0zJvpYztiEYtcFIRoUsQnz2M0yii45BKtWMxGaCUFRruaYTvYgOd/eabcaiv9CDGnXCc+YiNpAn7RwwPkXiRO/QpMIKdPJ6WCvwPHtiobHVvXURZsscuw8ePzqf/GvahmLgeLgytoGf1Ru5PerrYUdF0HbLX/Knh9g2sUibLBOE9VIXcxlwNHcIJ70f7VwH82jaN9q57yi5RTQszgifYZp1FZk2tZaVuf9BPmWoFB3nsaAetdxE9M26r4isZi6b//584nBt88=
+        file: ethercore-geth*-$TRAVIS_OS_NAME-$TRAVIS_TAG.*
+        file_glob: true
+        draft: true
+        on:
+          repo: ethercore/go-ethercore
+          tags: true
+        skip_cleanup: true
+        tag_name: "$TRAVIS_TAG"
+
+    # This builder only tests code on latest version of Go
+    - os: linux
+      dist: xenial
+      go: 1.13.x
+      env:
+        - test
+      script:
+        - go run build/ci.go install
+        - travis_wait 60 go run build/ci.go test
+
+  allow_failures:
+    - env:
+        - test

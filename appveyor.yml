@@ -1,0 +1,44 @@
+os: Visual Studio 2015
+
+# Clone directly into GOPATH.
+clone_folder: C:\gopath\src\github.com\ethercore\go-ethercore
+clone_depth: 5
+version: "{branch}.{build}"
+environment:
+  global:
+    GOPATH: C:\gopath
+    CC: gcc.exe
+  matrix:
+    - GETH_ARCH: amd64
+      MSYS2_ARCH: x86_64
+      MSYS2_BITS: 64
+      MSYSTEM: MINGW64
+      PATH: C:\msys64\mingw64\bin\;C:\Program Files (x86)\NSIS\;%PATH%
+
+install:
+  - git submodule update --init
+  - rmdir C:\go /s /q
+  - appveyor DownloadFile https://dl.google.com/go/go1.13.8.windows-%GETH_ARCH%.zip
+  - 7z x go1.13.8.windows-%GETH_ARCH%.zip -y -oC:\ > NUL
+  - go version
+  - gcc --version
+
+build_script:
+  - go run build\ci.go install
+  - 7z a ethercore-geth-win64-%APPVEYOR_REPO_TAG_NAME%.zip .\build\bin\geth.exe
+  - 7z a ethercore-geth-alltools-win64-%APPVEYOR_REPO_TAG_NAME%.zip .\build\bin\*
+
+artifacts:
+  - path: '*ethercore-geth-win64*.zip'
+    name: geth
+  - path: '*ethercore-geth-alltools-win64*.zip'
+    name: alltools
+
+deploy:
+  provider: GitHub
+  artifact: /ethercore-geth.*-win64-%APPVEYOR_REPO_TAG_NAME%\.zip.*/
+  auth_token:
+    secure: cgLsXX54ggfTJgj4Tl2/b/VLm66XQSW5x5TxfNe7h8fPHd9bOnGI4Fyil6fl1IGw
+  draft: true
+  on:
+    appveyor_repo_tag: true
