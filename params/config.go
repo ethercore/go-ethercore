@@ -31,7 +31,7 @@ var (
 	TestnetGenesisHash       = common.HexToHash("0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d")
 	RinkebyGenesisHash       = common.HexToHash("0x6341fd3daf94b748c72ced5a5b26028f2474f5f00d824504e4fa37a75767e177")
 	GoerliGenesisHash        = common.HexToHash("0xbf7e331f7f7c1dd2e05159666b3bf8bc7a8a3a9eb1d518969eab529dd9b88c1a")
-	EtherCoreGenesisHash     = common.HexToHash("0x9bc5f1def3b96ac2b4a6d7f8a5047d6db2451328eb9469df48c06a6a4a4f3734")
+	EtherCoreGenesisHash     = common.HexToHash("0x7f9663a183c69351b18f8f4627dbfcc3e0c145cfaeca1953be9edeb35395c3ed")
 	EtherCorePoAGenesisHash  = common.HexToHash("0x35ff2fc24aba0e85f462d02559e4b87e5a2ae239fa9a0af53799c15c98ed727a")
 	EtherCoreTestGenesisHash = common.HexToHash("0x1701803e3dbffe0abd7c7d9d0c703f369c2783c0b4f7981baf9e0c538764b071")
 )
@@ -220,7 +220,7 @@ var (
 		DAOForkBlock:        nil,
 		DAOForkSupport:      true,
 		EIP150Block:         big.NewInt(0),
-		EIP150Hash:          common.HexToHash("0x9bc5f1def3b96ac2b4a6d7f8a5047d6db2451328eb9469df48c06a6a4a4f3734"),
+		EIP150Hash:          common.HexToHash("7f9663a183c69351b18f8f4627dbfcc3e0c145cfaeca1953be9edeb35395c3ed"),
 		EIP155Block:         big.NewInt(0),
 		EIP158Block:         big.NewInt(0),
 		ByzantiumBlock:      big.NewInt(0),
