@@ -215,7 +215,7 @@ var (
 
 	// EtherCoreChainConfig contains the chain parameters to run a node on the EtherCore network.
 	EtherCoreChainConfig = &ChainConfig{
-		ChainID:             big.NewInt(466),
+		ChainID:             big.NewInt(496),
 		HomesteadBlock:      big.NewInt(0),
 		DAOForkBlock:        nil,
 		DAOForkSupport:      true,
@@ -235,7 +235,7 @@ var (
 
 	// EtherCorePoAChainConfig contains the chain parameters to run a node on the EtherCore PoA network.
 	EtherCorePoAChainConfig = &ChainConfig{
-		ChainID:             big.NewInt(467),
+		ChainID:             big.NewInt(497),
 		HomesteadBlock:      big.NewInt(0),
 		DAOForkBlock:        nil,
 		DAOForkSupport:      true,
@@ -255,7 +255,7 @@ var (
 
 	// EtherCoreTestChainConfig contains the chain parameters to run a node on the EtherCore Test network.
 	EtherCoreTestChainConfig = &ChainConfig{
-		ChainID:             big.NewInt(468),
+		ChainID:             big.NewInt(498),
 		HomesteadBlock:      big.NewInt(0),
 		DAOForkBlock:        nil,
 		DAOForkSupport:      true,
